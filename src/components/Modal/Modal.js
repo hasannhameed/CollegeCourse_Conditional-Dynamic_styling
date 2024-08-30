@@ -3,14 +3,12 @@ import './Modal.css'; // Import the CSS file
 import ReactDom from 'react-dom'
 
 const Modal = (props) => {
-    const chickHere = ()=>{
+    const checkHere = ()=>{
         props.onHandleValidation(true);
     }
-
-    
-    
+  
   return ReactDom.createPortal(
-     <div onClick={chickHere} className="modal-overlay">
+     <div onClick={checkHere} className="modal-overlay">
     <div className="modal-content">
       <h1>Invalid Details</h1>
       <p>Please enter valid information.</p>
