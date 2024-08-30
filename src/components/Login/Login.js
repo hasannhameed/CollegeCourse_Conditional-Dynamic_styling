@@ -1,8 +1,23 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useState, useEffect, } from 'react';
+import { useReducer } from 'react';
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
+
+const initialState = 5;
+const reducer = (state, action)=>{
+  if(action.type==='increment'){
+    console.log(state, action);
+    return state+5;
+    
+  }
+  if(action.type==='decrement'){
+    console.log(state, action);
+    return state-5;
+    
+  }
+  
+}
 
 const Login = (props) => {
   const [enteredEmail, setEnteredEmail] = useState('');
@@ -11,16 +26,29 @@ const Login = (props) => {
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
-  useEffect(()=>{
-    const identifier = setTimeout(()=>{
-      console.log("Checking for validation");
-      setFormIsValid(enteredEmail.includes("@") && enteredPassword.trim().length>6);
-    },500);
-    return()=>{
-      console.log("cleaning up...");
-      clearTimeout(identifier);
-    }
-  })
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    console.log('EFFECT RUNNING');
+
+    return () => {
+      console.log('EFFECT CLEANUP');
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   const identifier = setTimeout(() => {
+  //     console.log('Checking form validity!');
+  //     setFormIsValid(
+  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6
+  //     );
+  //   }, 500);
+
+  //   return () => {
+  //     console.log('CLEANUP');
+  //     clearTimeout(identifier);
+  //   };
+  // }, [enteredEmail, enteredPassword]);
 
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
@@ -34,7 +62,7 @@ const Login = (props) => {
     setEnteredPassword(event.target.value);
 
     setFormIsValid(
-      event.target.value.trim().length > 6 && enteredEmail.includes('@')
+      enteredEmail.includes('@') && event.target.value.trim().length > 6
     );
   };
 
@@ -53,6 +81,9 @@ const Login = (props) => {
 
   return (
     <Card className={classes.login}>
+      <h1>{state}</h1>
+        <button onClick={()=>dispatch({type:"increment"})}>Click me+5</button>
+        <button onClick={()=>dispatch({type:"decrement"})}>Click me-5</button>
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
@@ -73,6 +104,7 @@ const Login = (props) => {
             passwordIsValid === false ? classes.invalid : ''
           }`}
         >
+        
           <label htmlFor="password">Password</label>
           <input
             type="password"
